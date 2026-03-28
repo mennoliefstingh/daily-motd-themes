@@ -1,0 +1,14 @@
+# Wikipedia "On This Day" extension for daily-motd
+# Requires: curl, jq
+#
+# Install: copy this file to ~/.config/daily-motd/extensions/
+# Then run: daily-motd --source "Wikipedia On This Day"
+
+name: Wikipedia On This Day
+type: command
+command: |
+  curl -fsSL "https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/{{month}}/{{day}}" \
+    | jq -r 'if .selected and (.selected | length) > 0 then .selected[0].text else "No Wikipedia event found for today." end'
+cache: eod
+timeout: 10s
+fallback: "Could not reach Wikipedia today."
