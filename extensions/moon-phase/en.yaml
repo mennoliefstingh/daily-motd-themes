@@ -1,0 +1,31 @@
+# Moon Phase extension for daily-motd
+# Requires: bash (pure math, no network or external tools needed)
+# Calculates today's moon phase using the Julian Date method.
+#
+# Install: copy this file to ~/.config/daily-motd/extensions/
+# Then run: daily-motd --source "Moon Phase"
+
+name: Moon Phase
+type: command
+color: "#4a4e69"
+command: |
+  python3 - <<'EOF'
+import datetime, math
+now = datetime.date.today()
+y, m, d = now.year, now.month, now.day
+if m < 3:
+    y -= 1
+    m += 12
+a = y // 100
+b = 2 - a + a // 4
+jd = int(365.25*(y+4716)) + int(30.6001*(m+1)) + d + b - 1524.5
+days = jd - 2451549.5
+phase = (days % 29.53058770576) / 29.53058770576
+names = ["🌑 New Moon","🌒 Waxing Crescent","🌓 First Quarter","🌔 Waxing Gibbous","🌕 Full Moon","🌖 Waning Gibbous","🌗 Last Quarter","🌘 Waning Crescent"]
+idx = int(phase * 8 + 0.5) % 8
+pct = int(phase * 100)
+print(f"{names[idx]}\n\nThe moon is {pct}% through its current cycle.")
+EOF
+cache: eod
+timeout: 5s
+fallback: "Could not calculate moon phase (python3 required)."

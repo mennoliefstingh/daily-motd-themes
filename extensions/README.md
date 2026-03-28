@@ -4,10 +4,11 @@ Extensions are command-based dynamic sources for `daily-motd`. Instead of a stat
 
 ## Installing an extension
 
-Copy a YAML file from this directory to `~/.config/daily-motd/extensions/`:
+Copy the YAML file to `~/.config/daily-motd/extensions/`:
 
 ```sh
-cp wikipedia-on-this-day.yaml ~/.config/daily-motd/extensions/
+# Example: Wikipedia On This Day
+cp wikipedia-on-this-day/en.yaml ~/.config/daily-motd/extensions/wikipedia-on-this-day.yaml
 ```
 
 Then select it by name:
@@ -16,11 +17,24 @@ Then select it by name:
 daily-motd --source "Wikipedia On This Day"
 ```
 
+## Available extensions
+
+| Extension | Requires | Description |
+|-----------|----------|-------------|
+| [today-in-nature](today-in-nature/) | — | Daily nature fact (EN/NL) |
+| [wikipedia-on-this-day](wikipedia-on-this-day/) | `curl`, `jq` | A selected Wikipedia event for today |
+| [nasa-apod](nasa-apod/) | `curl`, `jq` | NASA Astronomy Picture of the Day |
+| [github-trending](github-trending/) | `python3` | Top trending GitHub repos this week |
+| [word-of-the-day](word-of-the-day/) | `curl`, `jq` | A curated word with its definition |
+| [this-day-in-history](this-day-in-history/) | `curl`, `jq` | A historical event from today's date |
+| [moon-phase](moon-phase/) | `python3` | Today's moon phase (no network needed) |
+
 ## Extension YAML format
 
 ```yaml
 name: My Extension        # Display name (used with --source)
 type: command             # Must be "command"
+color: "#3366cc"          # Optional hex color for the box border
 command: |                # Shell command to run; output becomes the MOTD
   echo "Hello, world!"
 cache: eod                # How long to cache the output (see below)
@@ -51,21 +65,3 @@ The following placeholders are replaced before the command is executed:
 | `24h`  | 24 hours from last fetch |
 | `7d`   | 7 days from last fetch   |
 | `none` | Never cache; run every time |
-
-## Wikipedia On This Day
-
-**Requirements:** `curl` and `jq` must be installed.
-
-```sh
-# macOS
-brew install jq
-
-# Debian/Ubuntu
-sudo apt install jq curl
-```
-
-**Usage:**
-
-```sh
-daily-motd --source "Wikipedia On This Day"
-```

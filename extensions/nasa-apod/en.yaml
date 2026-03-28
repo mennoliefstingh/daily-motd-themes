@@ -1,0 +1,16 @@
+# NASA Astronomy Picture of the Day extension for daily-motd
+# Requires: curl, jq
+# No API key required for the public endpoint.
+#
+# Install: copy this file to ~/.config/daily-motd/extensions/
+# Then run: daily-motd --source "NASA APOD"
+
+name: NASA APOD
+type: command
+color: "#1a1a2e"
+command: |
+  curl -fsSL "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY" \
+    | jq -r '"🔭 \(.title)\n\n\(.explanation[:300])..."'
+cache: eod
+timeout: 15s
+fallback: "Could not reach NASA APOD today."

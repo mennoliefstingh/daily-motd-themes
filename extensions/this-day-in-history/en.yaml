@@ -1,0 +1,16 @@
+# This Day in History extension for daily-motd
+# Requires: curl, jq
+# Uses the free history API from history.muffinlabs.com — no key required.
+#
+# Install: copy this file to ~/.config/daily-motd/extensions/
+# Then run: daily-motd --source "This Day in History"
+
+name: This Day in History
+type: command
+color: "#8b4513"
+command: |
+  curl -fsSL "https://history.muffinlabs.com/date/{{month}}/{{day}}" \
+    | jq -r '.data.Events[0] | "\(.year): \(.text)"'
+cache: eod
+timeout: 10s
+fallback: "Could not fetch historical event for today."

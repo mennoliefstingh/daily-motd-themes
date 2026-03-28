@@ -1,0 +1,18 @@
+# Word of the Day extension for daily-motd
+# Requires: curl, jq
+# Uses the Free Dictionary API — no key required.
+#
+# Install: copy this file to ~/.config/daily-motd/extensions/
+# Then run: daily-motd --source "Word of the Day"
+
+name: Word of the Day
+type: command
+color: "#7b2d8b"
+command: |
+  WORDS="ephemeral serendipity sonder liminal solitude wanderlust ineffable petrichor hiraeth fernweh sillage oneiric vellichor chrysalism lacuna apricity selcouth meraki numinous sonder"
+  WORD=$(echo "$WORDS" | tr ' ' '\n' | awk -v seed="$(date +%j)" 'BEGIN{srand(seed)} {lines[NR]=$0} END{print lines[int(rand()*NR)+1]}')
+  curl -fsSL "https://api.dictionaryapi.dev/api/v2/entries/en/${WORD}" \
+    | jq -r '.[0] | "\(.word) (\(.meanings[0].partOfSpeech))\n\n\(.meanings[0].definitions[0].definition)"'
+cache: eod
+timeout: 10s
+fallback: "Could not fetch word of the day."
